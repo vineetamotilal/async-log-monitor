@@ -1,6 +1,6 @@
 # Async Log Monitor 🛡️
 
-**Sentinel-Py** is a distributed log monitoring engine built with expert-level Python design patterns. It efficiently tracks application log files in real-time, extracts structured data, and triggers alerts when error rates exceed customizable thresholds.
+**Async Log Monitor** is a distributed log monitoring engine built with expert-level Python design patterns. It efficiently tracks application log files in real-time, extracts structured data, and triggers alerts when error rates exceed customizable thresholds.
 
 This project was built to demonstrate an understanding of **Clean Architecture**, **Concurrency**, and **Advanced Metaprogramming** in Python, acting as a lightweight version of enterprise tools like Datadog or Filebeat.
 
@@ -18,7 +18,7 @@ This project was built to demonstrate an understanding of **Clean Architecture**
 ## 📂 Project Structure
 
 ```text
-sentinel-py/
+async-log-monitor/
 ├── pyproject.toml              # Project metadata and dependencies
 ├── README.md                   
 ├── src/
