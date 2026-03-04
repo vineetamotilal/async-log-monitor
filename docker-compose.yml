@@ -12,7 +12,7 @@ services:
     # Mount a host directory into /logs so the monitor can tail real log files.
     # Change ./logs to the path on your machine that contains the logs to watch.
     volumes:
-      - ./logs:/logs:ro   # read-only mount of your log directory
+      - ./logs:/logs:ro # read-only mount of your log directory
 
     # Keep stdin open and allocate a pseudo-TTY (useful for Ctrl+C in dev)
     stdin_open: true
@@ -22,3 +22,4 @@ services:
 
     environment:
       - PYTHONUNBUFFERED=1
+      - LOG_DIR=/logs

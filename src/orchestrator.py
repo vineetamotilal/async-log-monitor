@@ -67,30 +67,51 @@ class AsyncLogMonitorOrchestrator:
 
 async def main():
     """
-    Example runner for local testing.
+    Entry point that works for both local dev and Docker.
+
+    - In Docker: set LOG_DIR=/logs (via docker-compose env).  The orchestrator
+      will monitor every *.jsonl file it finds there.
+    - Locally (no LOG_DIR): a dummy test_app.jsonl is created in the current
+      working directory for quick manual testing.
     """
     from src.parser.json_parser import JSONLogParser
-    
-    # 1. Setup a test log file
-    test_log = "test_app.jsonl"
-    with open(test_log, "w", encoding="utf-8") as f:
-        f.write('{"timestamp": "2023-10-27T10:00:00Z", "level": "INFO", "message": "App started"}\n')
-        
-    print(f"Created test log file: {test_log}")
-    print("Please manually append JSON lines to this file to see Async Log Monitor in action.")
-    print("Example: echo '{\"level\": \"ERROR\", \"message\": \"Failed!\"}' >> test_app.jsonl\n")
 
-    # 2. Initialize the orchestrator & parser
     json_parser = JSONLogParser()
     orchestrator = AsyncLogMonitorOrchestrator()
-    
-    # 3. Define the monitoring mapping
-    # Maps absolute paths to concrete parser instances
-    files_to_monitor = {
-        os.path.abspath(test_log): json_parser
-    }
-    
-    # 4. Boot the engine
+
+    log_dir = os.environ.get("LOG_DIR", "").strip()
+
+    if log_dir:
+        # ── Docker / production mode ──────────────────────────────────────────
+        print(f"📂 Docker mode: watching log files in '{log_dir}'")
+
+        # Discover all .jsonl files already present in the mounted volume
+        existing = [
+            os.path.join(log_dir, f)
+            for f in os.listdir(log_dir)
+            if f.endswith(".jsonl")
+        ]
+
+        if not existing:
+            # Nothing there yet — watch for a default filename
+            default = os.path.join(log_dir, "app.jsonl")
+            print(f"⚠️  No .jsonl files found in {log_dir}. Will wait for {default}")
+            existing = [default]
+
+        files_to_monitor = {path: json_parser for path in existing}
+    else:
+        # ── Local dev mode ────────────────────────────────────────────────────
+        test_log = "test_app.jsonl"
+        with open(test_log, "w", encoding="utf-8") as f:
+            f.write('{"timestamp": "2023-10-27T10:00:00Z", "level": "INFO", "message": "App started"}\n')
+
+        print(f"🗒️  Local mode: created test log file '{test_log}'")
+        print("Append JSON lines to trigger the monitor:")
+        print('  echo \'{"level": "ERROR", "message": "Failed!"}\' >> test_app.jsonl\n')
+
+        files_to_monitor = {os.path.abspath(test_log): json_parser}
+
+    # Boot the engine
     try:
         await orchestrator.run(files_to_monitor)
     except KeyboardInterrupt:
