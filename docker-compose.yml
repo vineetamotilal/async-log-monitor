@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  async-log-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: async-log-monitor:latest
+    container_name: async-log-monitor
+
+    # Mount a host directory into /logs so the monitor can tail real log files.
+    # Change ./logs to the path on your machine that contains the logs to watch.
+    volumes:
+      - ./logs:/logs:ro   # read-only mount of your log directory
+
+    # Keep stdin open and allocate a pseudo-TTY (useful for Ctrl+C in dev)
+    stdin_open: true
+    tty: true
+
+    restart: unless-stopped
+
+    environment:
+      - PYTHONUNBUFFERED=1

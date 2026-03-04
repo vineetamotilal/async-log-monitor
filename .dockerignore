@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test artefacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker itself
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Local test log files (real logs will be volume-mounted)
+test_app.jsonl
+logs/
+
+# Docs
+README.md
