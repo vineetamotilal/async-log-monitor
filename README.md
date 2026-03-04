@@ -1,4 +1,4 @@
-# Sentinel-Py 🛡️
+# Async Log Monitor 🛡️
 
 **Sentinel-Py** is a distributed log monitoring engine built with expert-level Python design patterns. It efficiently tracks application log files in real-time, extracts structured data, and triggers alerts when error rates exceed customizable thresholds.
 
