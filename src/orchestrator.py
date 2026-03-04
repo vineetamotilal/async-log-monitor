@@ -1,10 +1,10 @@
 import asyncio
 import os
-from src.sentinel_py.reader.tailer import tail_file
-from src.sentinel_py.parser.base import LogParserABC, LogEntry
-from src.sentinel_py.alerts.decorators import threshold_alert
+from src.reader.tailer import tail_file
+from src.parser.base import LogParserABC, LogEntry
+from src.alerts.decorators import threshold_alert
 
-class SentinelOrchestrator:
+class AsyncLogMonitorOrchestrator:
     """
     The main monitoring engine that ties everything together.
     Uses AsyncIO to concurrently tail multiple log files.
@@ -53,7 +53,7 @@ class SentinelOrchestrator:
         Args:
             files_to_monitor: A dictionary mapping file paths to their specific Parser objects.
         """
-        print("🚀 Starting Sentinel-Py Orchestrator...\n")
+        print("🚀 Starting Async Log Monitor Orchestrator...\n")
         
         # Create an asyncio Task for each file to monitor
         for file_path, parser in files_to_monitor.items():
@@ -69,7 +69,7 @@ async def main():
     """
     Example runner for local testing.
     """
-    from src.sentinel_py.parser.json_parser import JSONLogParser
+    from src.parser.json_parser import JSONLogParser
     
     # 1. Setup a test log file
     test_log = "test_app.jsonl"
@@ -77,12 +77,12 @@ async def main():
         f.write('{"timestamp": "2023-10-27T10:00:00Z", "level": "INFO", "message": "App started"}\n')
         
     print(f"Created test log file: {test_log}")
-    print("Please manually append JSON lines to this file to see Sentinel-Py in action.")
+    print("Please manually append JSON lines to this file to see Async Log Monitor in action.")
     print("Example: echo '{\"level\": \"ERROR\", \"message\": \"Failed!\"}' >> test_app.jsonl\n")
 
     # 2. Initialize the orchestrator & parser
     json_parser = JSONLogParser()
-    orchestrator = SentinelOrchestrator()
+    orchestrator = AsyncLogMonitorOrchestrator()
     
     # 3. Define the monitoring mapping
     # Maps absolute paths to concrete parser instances
@@ -94,7 +94,7 @@ async def main():
     try:
         await orchestrator.run(files_to_monitor)
     except KeyboardInterrupt:
-        print("\nShutting down Sentinel-Py...")
+        print("\nShutting down Async Log Monitor...")
 
 if __name__ == "__main__":
     # Ensure asyncio.run is called on the main coroutine
