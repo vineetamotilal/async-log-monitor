@@ -7,7 +7,7 @@ This project was built to demonstrate an understanding of **Clean Architecture**
 ## ✨ Core Features & Architecture
 
 *   **Memory-Efficient Log Tailing (Generators & Context Managers)**  
-    Uses an asynchronous generator to `yield` one line of a log file at a time, just like the Unix `tail -f` command. It relies on `asynccontextmanager` to guarantee safe file handle closure even if exceptions occur. No matter how large the log file gets, Sentinel-Py's memory footprint remains tiny.
+    Uses an asynchronous generator to `yield` one line of a log file at a time, just like the Unix `tail -f` command. It relies on `asynccontextmanager` to guarantee safe file handle closure even if exceptions occur. No matter how large the log file gets, Async Log Monitor's memory footprint remains tiny.
 *   **Event-Driven Concurrency (AsyncIO)**  
     Built entirely on `asyncio`, the orchestrator can simultaneously monitor dozens of separate log files without the heavy overhead of threading or multiprocessing by utilizing an asynchronous event loop (`asyncio.gather`).
 *   **Dependency Inversion Principle (ABC & Pydantic)**  
@@ -22,16 +22,14 @@ async-log-monitor/
 ├── pyproject.toml              # Project metadata and dependencies
 ├── README.md                   
 ├── src/
-│   └── sentinel_py/
-│       ├── __init__.py
-│       ├── reader/
-│       │   └── tailer.py       # AsyncGenerator and ContextManager for file tailing
-│       ├── parser/
-│       │   ├── base.py         # LogParserABC and Pydantic LogEntry model
-│       │   └── json_parser.py  # Concrete implementation for JSON testing
-│       ├── alerts/
-│       │   └── decorators.py   # Metaprogramming @threshold_alert
-│       └── orchestrator.py     # Main AsyncIO concurrency engine
+│   ├── reader/
+│   │   └── tailer.py       # AsyncGenerator and ContextManager for file tailing
+│   ├── parser/
+│   │   ├── base.py         # LogParserABC and Pydantic LogEntry model
+│   │   └── json_parser.py  # Concrete implementation for JSON testing
+│   ├── alerts/
+│   │   └── decorators.py   # Metaprogramming @threshold_alert
+│   └── orchestrator.py     # Main AsyncIO concurrency engine
 └── tests/
     └── ...                     # Test suite
 ```
@@ -45,9 +43,9 @@ async-log-monitor/
 ### Running the Orchestrator
 
 1.  Clone the repository and install dependencies.
-2.  Start the **Sentinel-Py Orchestrator** in your terminal. This will spin up the daemon and create a dummy `test_app.jsonl` file to monitor:
+2.  Start the **Async Log Monitor Orchestrator** in your terminal. This will spin up the daemon and create a dummy `test_app.jsonl` file to monitor:
     ```bash
-    python -m src.sentinel_py.orchestrator
+    python -m src.orchestrator
     ```
 3.  Open a **second terminal** and simulate an application writing an error to the log file:
     ```bash
